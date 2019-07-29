@@ -19,6 +19,7 @@ module Orgs
         flash[:warning] = "No students were found in your Google Classroom. Please add students and try again."
         redirect_to roster_path(current_organization)
       else
+        GitHubClassroom.statsd.increment("google_classroom.import.success")
         add_google_classroom_students(students)
       end
     end

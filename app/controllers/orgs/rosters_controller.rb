@@ -133,11 +133,21 @@ module Orgs
           flash[:warning] = "No students created."
         elsif entries.length == identifiers.length
           flash[:success] = "Students created."
+          if google_classroom_roster_import_enabled? && current_organization.google_course_id
+            binding.pry
+            GitHubClassroom.statsd.increment("google_classroom.import.sucesss")
+          end
         else
           flash[:success] = "Students created. Some duplicates have been omitted."
+          if google_classroom_roster_import_enabled? && current_organization.google_course_id
+            GitHubClassroom.statsd.increment("google_classroom.import.sucesss")
+          end
         end
       rescue RosterEntry::IdentifierCreationError
         flash[:error] = "An error has occured. Please try again."
+        if google_classroom_roster_import_enabled? && current_organization.google_course_id
+          GitHubClassroom.statsd.increment("google_classroom.import.failed")
+        end
       end
 
       redirect_to roster_path(current_organization)

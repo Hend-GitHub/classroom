@@ -94,6 +94,8 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
         end
 
         it "suceeds" do
+          binding.pry
+          expect(GitHubClassroom.statsd).to receive(:increment).with("google_classroom.create.success")
           expect(Organization.first.google_course_id).to eq("6464")
           expect(flash[:success]).to eq("Google Classroom integration was succesfully configured.")
         end

@@ -9,9 +9,14 @@ module Orgs
 
     def create
       current_organization.update(google_course_id: params[:course_id])
-
-      flash[:success] = "Google Classroom integration was succesfully configured."
-      redirect_to new_roster_path(current_organization)
+      if current_organization.google_course_id == params[:course_id]
+        binding.pry
+        GitHubClassroom.statsd.increment("google_classroom.create.success")
+        flash[:success] = "Google Classroom integration was succesfully configured."
+        redirect_to new_roster_path(current_organization)
+      else
+        GitHubClassroom.statsd.increment("google_classroom.create.failed")
+      end
     end
 
     def search
