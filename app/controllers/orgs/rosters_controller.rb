@@ -134,7 +134,6 @@ module Orgs
         elsif entries.length == identifiers.length
           flash[:success] = "Students created."
           if google_classroom_roster_import_enabled? && current_organization.google_course_id
-            binding.pry
             GitHubClassroom.statsd.increment("google_classroom.import.sucesss")
           end
         else
